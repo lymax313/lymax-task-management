@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lymax Task Management System</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>Lymax Task Management System</h1>
+        <p class="subtitle">Real-time activity tracking and team coordination</p>
+      </header>
+
+      <nav class="main-nav">
+        <button class="nav-tab active" data-tab="dashboard">Dashboard</button>
+        <button class="nav-tab" data-tab="my-day">My Day</button>
+        <button class="nav-tab" data-tab="team-leader">Team Leader</button>
+      </nav>
+
+      <div id="dashboard" class="tab-content active">
+        <section class="filter-section">
+          <div class="filter-controls">
+            <div class="filter-group">
+              <label>Date Range</label>
+              <input type="date" id="filter-date-start" />
+              <span>to</span>
+              <input type="date" id="filter-date-end" />
+            </div>
+            <div class="filter-group">
+              <label>Employee</label>
+              <select id="filter-employee" multiple>
+                <option value="">All Employees</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Role</label>
+              <select id="filter-role">
+                <option value="">All Roles</option>
+                <option value="Counselor">Counselor</option>
+                <option value="Sales">Sales</option>
+                <option value="Ops">Operations</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Academic">Academic</option>
+                <option value="Admin">Admin</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Task Type</label>
+              <select id="filter-task-type">
+                <option value="">All Task Types</option>
+                <option value="Call">Call</option>
+                <option value="WhatsApp">WhatsApp</option>
+                <option value="Follow-up">Follow-up</option>
+                <option value="Demo">Demo</option>
+                <option value="Meeting">Meeting</option>
+                <option value="Admin">Admin</option>
+                <option value="Email">Email</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Status</label>
+              <select id="filter-status">
+                <option value="">All Status</option>
+                <option value="To Do">To Do</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Follow-up">Follow-up</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Priority</label>
+              <select id="filter-priority">
+                <option value="">All Priority</option>
+                <option value="Critical">Critical</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+            <button id="filter-reset" class="btn-secondary">Reset</button>
+          </div>
+
+          <div class="quick-filters">
+            <button class="quick-filter-btn" data-filter="today">Today</button>
+            <button class="quick-filter-btn" data-filter="week">This Week</button>
+            <button class="quick-filter-btn" data-filter="overdue">Overdue</button>
+            <button class="quick-filter-btn" data-filter="high-priority">High Priority</button>
+          </div>
+
+          <div class="filter-actions">
+            <label class="my-view-toggle">
+              <input type="checkbox" id="my-view-toggle" />
+              <span>My View (Current User)</span>
+            </label>
+            <div class="last-refreshed">
+              Last refreshed: <span id="last-refreshed-time">--:--</span>
+            </div>
+            <button id="refresh-now" class="btn-primary">Refresh Now</button>
+          </div>
+        </section>
+        <section class="kpi-section">
+          <div class="kpi-card">
+            <div class="kpi-icon">📋</div>
+            <div class="kpi-content">
+              <h3>Tasks Today</h3>
+              <div class="kpi-value" id="kpi-tasks-today">0</div>
+              <div class="kpi-label">Scheduled for today</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">✅</div>
+            <div class="kpi-content">
+              <h3>Completed Today</h3>
+              <div class="kpi-value" id="kpi-completed-today">0</div>
+              <div class="kpi-label">Finished tasks</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">⏰</div>
+            <div class="kpi-content">
+              <h3>Overdue Tasks</h3>
+              <div class="kpi-value" id="kpi-overdue">0</div>
+              <div class="kpi-label">Need attention</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">🎯</div>
+            <div class="kpi-content">
+              <h3>On-time %</h3>
+              <div class="kpi-value" id="kpi-ontime-rate">0%</div>
+              <div class="kpi-label">Completion rate</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="main-section">
+          <div class="kanban-container">
+            <h2>Task Board</h2>
+            <div class="kanban-board">
+              <div class="kanban-column" data-status="To Do">
+                <div class="column-header">
+                  <h3>To Do</h3>
+                  <span class="task-count" id="count-todo">0</span>
+                </div>
+                <div class="task-list" id="tasks-todo"></div>
+              </div>
+              <div class="kanban-column" data-status="In Progress">
+                <div class="column-header">
+                  <h3>In Progress</h3>
+                  <span class="task-count" id="count-inprogress">0</span>
+                </div>
+                <div class="task-list" id="tasks-inprogress"></div>
+              </div>
+              <div class="kanban-column" data-status="Follow-up">
+                <div class="column-header">
+                  <h3>Follow-up</h3>
+                  <span class="task-count" id="count-followup">0</span>
+                </div>
+                <div class="task-list" id="tasks-followup"></div>
+              </div>
+              <div class="kanban-column" data-status="Completed">
+                <div class="column-header">
+                  <h3>Completed</h3>
+                  <span class="task-count" id="count-completed">0</span>
+                </div>
+                <div class="task-list" id="tasks-completed"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <h2>Today's Tasks by Employee</h2>
+            <div class="table-wrapper">
+              <table class="employee-table">
+                <thead>
+                  <tr>
+                    <th>Employee</th>
+                    <th>Task</th>
+                    <th>Status</th>
+                    <th>Priority</th>
+                    <th>Due Time</th>
+                    <th>Outcome</th>
+                  </tr>
+                </thead>
+                <tbody id="employee-table-body">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="chart-section">
+          <h2>Weekly Performance Trends</h2>
+          <div class="chart-container">
+            <canvas id="weekly-chart"></canvas>
+          </div>
+        </section>
+      </div>
+
+      <div id="my-day" class="tab-content">
+        <section class="my-day-kpi-section">
+          <div class="mini-kpi-card">
+            <div class="mini-kpi-icon">📋</div>
+            <div class="mini-kpi-content">
+              <h4>My Tasks Today</h4>
+              <div class="mini-kpi-value" id="my-day-tasks-today">0</div>
+            </div>
+          </div>
+          <div class="mini-kpi-card">
+            <div class="mini-kpi-icon">✅</div>
+            <div class="mini-kpi-content">
+              <h4>Completed Today</h4>
+              <div class="mini-kpi-value" id="my-day-completed-today">0</div>
+            </div>
+          </div>
+          <div class="mini-kpi-card">
+            <div class="mini-kpi-icon">⏰</div>
+            <div class="mini-kpi-content">
+              <h4>Overdue</h4>
+              <div class="mini-kpi-value" id="my-day-overdue">0</div>
+            </div>
+          </div>
+          <div class="mini-kpi-card">
+            <div class="mini-kpi-icon">🎯</div>
+            <div class="mini-kpi-content">
+              <h4>Focus (High Priority)</h4>
+              <div class="mini-kpi-value" id="my-day-focus">0</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="my-day-tasks">
+          <h2>Today's Tasks</h2>
+          <div id="my-day-task-list" class="my-day-task-list"></div>
+        </section>
+
+        <section class="my-day-timeline">
+          <h2>Time Tracking</h2>
+          <div id="my-day-timeline" class="timeline-chart"></div>
+        </section>
+      </div>
+
+      <div id="team-leader" class="tab-content">
+        <section class="team-summary">
+          <h2>Team Summary</h2>
+          <div class="table-wrapper">
+            <table class="team-table">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Assigned</th>
+                  <th>Completed</th>
+                  <th>Overdue</th>
+                  <th>On-time %</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="team-summary-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="workload-section">
+          <h2>Team Workload Distribution</h2>
+          <div class="chart-container" style="height: 300px;">
+            <canvas id="workload-chart"></canvas>
+          </div>
+        </section>
+
+        <section class="overdue-section">
+          <h2>Top 5 Overdue Tasks</h2>
+          <div id="top-overdue-list" class="overdue-list"></div>
+        </section>
+      </div>
+
+      <div id="task-modal" class="modal">
+        <div class="modal-content">
+          <span class="modal-close">&times;</span>
+          <h3 id="modal-task-title"></h3>
+          <div id="modal-task-details"></div>
+          <div class="modal-actions">
+            <button id="modal-start-btn" class="btn-primary">Start Task</button>
+            <button id="modal-complete-btn" class="btn-success">Complete Task</button>
+            <button id="modal-reschedule-btn" class="btn-secondary">Reschedule</button>
+            <button class="modal-close-btn btn-secondary">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
