@@ -1018,7 +1018,7 @@ const TaskManager = {
     this.addAnimationStyles();
 
     if (!this.loadFromLocalStorage()) {
-      this.generateSampleData();
+//       this.generateSampleData();
     }
 
     this.setupTabNavigation();
@@ -1030,6 +1030,27 @@ const TaskManager = {
     this.startGoogleSheetsSync();
     this.updateLastRefreshTime();
   },
+
+    addTask() {
+          const newTask = {
+                  id: this.generateUUID(),
+                  employee: document.getElementById('task-employee').value,
+                  description: document.getElementById('task-description').value,
+                  dueDate: document.getElementById('task-date').value,
+                  priority: document.getElementById('task-priority').value,
+                  status: document.getElementById('task-status').value,
+                  taskType: document.getElementById('task-type').value || 'General',
+                  outcome: ''
+                };
+          this.tasks.push(newTask);
+          this.saveToLocalStorage();
+          this.render();
+          // Clear form
+          document.getElementById('task-employee').value = '';
+          document.getElementById('task-description').value = '';
+          document.getElementById('task-date').value = '';
+          alert('Task created successfully!');
+        },
 };
 
 document.addEventListener('DOMContentLoaded', () => {
