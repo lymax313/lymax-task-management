@@ -854,18 +854,25 @@ const TaskManager = {
 
   setupTabNavigation() {
     const tabButtons = document.querySelectorAll('.nav-tab');
+        console.log('setupTabNavigation called', tabButtons.length, tabContents.length);
     const tabContents = document.querySelectorAll('.tab-content');
 
     tabButtons.forEach((button) => {
       button.addEventListener('click', () => {
         const targetTab = button.getAttribute('data-tab');
+                console.log('Tab clicked:', targetTab);
 
         tabButtons.forEach((btn) => btn.classList.remove('active'));
         tabContents.forEach((content) => content.classList.remove('active'));
 
         button.classList.add('active');
-        document.getElementById(targetTab).classList.add('active');
-
+                const targetElement = document.getElementById(targetTab);
+                console.log('Target element:', targetElement);
+        if (targetElement) {
+                    targetElement.classList.add('active');
+                  } else {
+                    console.error('Element not found:', targetTab);
+                  }
         if (targetTab === 'my-day') {
           this.renderMyDay();
         } else if (targetTab === 'team-leader') {
