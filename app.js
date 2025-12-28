@@ -1031,28 +1031,64 @@ const TaskManager = {
     this.updateLastRefreshTime();
   },
 
-    addTask() {
-          const newTask = {
-                  id: this.generateUUID(),
-                  employee: document.getElementById('task-employee').value,
-                  description: document.getElementById('task-description').value,
-                  dueDate: document.getElementById('task-date').value,
-                  priority: document.getElementById('task-priority').value,
-                  status: document.getElementById('task-status').value,
-                  taskType: document.getElementById('task-type').value || 'General',
-                  outcome: ''
-                };
-          this.tasks.push(newTask);
-          this.saveToLocalStorage();
-          this.render();
-          // Clear form
-          document.getElementById('task-employee').value = '';
-          document.getElementById('task-description').value = '';
-          document.getElementById('task-date').value = '';
-          alert('Task created successfully!');
-        },
+addTask() {
+        const employeeName = document.getElementById('task-employee').value.trim();
+        const description = document.getElementById('task-description').value.trim();
+        const dueDate = document.getElementById('task-date').value;
+        const taskType = document.getElementById('task-type').value;
+        const priority = document.getElementById('task-priority').value;
+        const status = document.getElementById('task-status').value;
+
+        if (!employeeName || !description || !dueDate) {
+            this.showNotification('Please fill all required fields');
+            return;
+        }
+
+        const dueDatetime = new Date(dueDate + 'T09:00:00');
+
+        const newTask = {
+            task_id: this.generateUUID(),
+            employee_name: employeeName,
+            role: 'General',
+            task_type: taskType,
+            description: description,
+            priority: priority,
+            status: status,
+            planned_date: dueDate,
+            planned_start_time: '09:00',
+            planned_end_time: null,
+            actual_start_time: null,
+            actual_end_time: null,
+            due_datetime: dueDatetime.toISOString(),
+            outcome: 'Pending',
+            source: 'Manual',
+            notes: ''
+        };
+
+        this.tasks.push(newTask);
+        this.saveToLocalStorage();
+        this.applyFilters();
+
+        // Clear form
+        document.getElementById('task-employee').value = '';
+        document.getElementById('task-description').value = '';
+        document.getElementById('task-date').value = '';
+        document.getElementById('task-type').selectedIndex = 0;
+        document.getElementById('task-priority').selectedIndex = 0;
+        document.getElementById('task-status').selectedIndex = 0;
+
+        this.showNotification('Task created successfully!');
+    }        },
 };
 
 document.addEventListener('DOMContentLoaded', () => {
   TaskManager.init();
+  
+    // Add event listener for Create Task button
+    const createTaskBtn = document.getElementById('create-task-btn');
+    if (createTaskBtn) {
+        createTaskBtn.addEventListener('click', () => {
+            TaskManager.addTask();
+        });
+    }
 });
