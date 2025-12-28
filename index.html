@@ -20,6 +20,35 @@
       </nav>
 
       <div id="dashboard" class="tab-content active">
+
+              <!-- Task Creation Form -->
+              <div class="create-task-section" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h3 style="margin-top: 0;">➕ Create New Task</h3>
+                        <div style="display: grid; gap: 10px;">
+                                    <input type="text" id="task-employee" placeholder="Employee Name" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                    <input type="text" id="task-description" placeholder="Task Description" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                    <input type="date" id="task-date" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                    <select id="task-type" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                                  <option value="Call">Call</option>
+                                                  <option value="Email">Email</option>
+                                                  <option value="Meeting">Meeting</option>
+                                                  <option value="Follow-up">Follow-up</option>
+                                                  <option value="Admin">Admin</option>
+                                                </select>
+                                    <select id="task-priority" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                                  <option value="Low">Low</option>
+                                                  <option value="Medium">Medium</option>
+                                                  <option value="High">High</option>
+                                                  <option value="Critical">Critical</option>
+                                                </select>
+                                    <select id="task-status" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                                  <option value="To Do">To Do</option>
+                                                  <option value="In Progress">In Progress</option>
+                                                  <option value="Completed">Completed</option>
+                                                </select>
+                                    <button onclick="TaskManager.addTask()" style="background: #4CAF50; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Create Task</button>
+                                  </div>
+                      </div>
         <section class="filter-section">
           <div class="filter-controls">
             <div class="filter-group">
@@ -30,10 +59,7 @@
             </div>
             <div class="filter-group">
               <label>Employee</label>
-              <select id="filter-employee" multiple>
-                <option value="">All Employees</option>
-              </select>
-            </div>
+                <input type="text" id="filter-employee" placeholder="Enter employee name" />            </div>
             <div class="filter-group">
               <label>Role</label>
               <select id="filter-role">
